@@ -1,0 +1,5 @@
+{
+    "0d5f2659": "cashChequeBeneficiary(address,uint256,bytes)",
+    "576d7271": "deploySimpleSwap(address,uint256)",
+    "2e1a7d4d": "withdraw(uint256 amount)"
+}

@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+start() {
+    KEYSTORE=/var/lib/bee-clef/keystore
+    CONFIGDIR=/var/lib/bee-clef
+    CHAINID=5
+    SECRET=$(cat /var/lib/bee-clef/password)
+    # clef with every start sets permissions back to 600
+    (sleep 4; chmod 660 /var/lib/bee-clef/clef.ipc) &
+    ( sleep 2; cat << EOF
+{ "jsonrpc": "2.0", "id":1, "result": { "text":"$SECRET" } }
+EOF
+) | clef --stdio-ui --keystore $KEYSTORE --configdir $CONFIGDIR --chainid $CHAINID --rules /etc/bee-clef/rules.js --nousb --4bytedb-custom /etc/bee-clef/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath /var/lib/bee-clef
+}
+
+stop() {
+    echo "STOP! Systemd will stop the service!"
+}
+
+case $1 in
+    start|stop) "$1"
+esac

@@ -1,0 +1,35 @@
+#!/bin/sh -e
+
+if [ "$1" = "configure" ]; then
+    if [ -z "$2" ]; then
+        SECRET=$(cat /var/lib/bee-clef/password)
+        parse_json() { echo $1|sed -e 's/[{}]/''/g'|sed -e 's/", "/'\",\"'/g'|sed -e 's/" ,"/'\",\"'/g'|sed -e 's/" , "/'\",\"'/g'|sed -e 's/","/'\"---SEPERATOR---\"'/g'|awk -F=':' -v RS='---SEPERATOR---' "\$1~/\"$2\"/ {print}"|sed -e "s/\"$2\"://"|tr -d "\n\t"|sed -e 's/\\"/"/g'|sed -e 's/\\\\/\\/g'|sed -e 's/^[ \t]*//g'|sed -e 's/^"//' -e 's/"$//' ; }
+        clef --configdir /var/lib/bee-clef --stdio-ui init >/dev/null 2>&1 << EOF
+$SECRET
+$SECRET
+EOF
+        clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount >/dev/null 2>&1 << EOF
+$SECRET
+EOF
+        clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x$(parse_json $(cat /var/lib/bee-clef/keystore/*) address) >/dev/null 2>&1 << EOF
+$SECRET
+$SECRET
+$SECRET
+EOF
+        clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui attest $(sha256sum /etc/bee-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
+$SECRET
+EOF
+        chown -R bee-clef:bee-clef /var/lib/bee-clef
+    fi
+    deb-systemd-helper unmask bee-clef.service >/dev/null || true
+
+    if deb-systemd-helper --quiet was-enabled bee-clef.service; then
+        deb-systemd-helper enable bee-clef.service >/dev/null || true
+    else
+        deb-systemd-helper update-state bee-clef.service >/dev/null || true
+    fi
+    if [ -d /run/systemd/system ]; then
+        systemctl --system daemon-reload >/dev/null || true
+        deb-systemd-invoke start bee-clef.service >/dev/null || true
+    fi
+fi

@@ -1,0 +1,16 @@
+[Unit]
+Description=Bee Clef
+Documentation=https://swarm-gateways.net/bzz:/docs.swarm.eth/
+After=network.target
+
+[Service]
+NoNewPrivileges=true
+User=bee-clef
+Group=bee-clef
+ExecStart=/usr/bin/clef-service start
+ExecStop=/usr/bin/clef-service stop
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

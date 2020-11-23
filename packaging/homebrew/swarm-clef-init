@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+if [ "$(ls -A /usr/local/var/lib/swarm-clef/keystore 2> /dev/null)" = "" ]; then
+    SECRET=$(cat /usr/local/var/lib/swarm-clef/password)
+    parse_json() { echo $1|sed -e 's/[{}]/''/g'|sed -e 's/", "/'\",\"'/g'|sed -e 's/" ,"/'\",\"'/g'|sed -e 's/" , "/'\",\"'/g'|sed -e 's/","/'\"---SEPERATOR---\"'/g'|awk -F=':' -v RS='---SEPERATOR---' "\$1~/\"$2\"/ {print}"|sed -e "s/\"$2\"://"|tr -d "\n\t"|sed -e 's/\\"/"/g'|sed -e 's/\\\\/\\/g'|sed -e 's/^[ \t]*//g'|sed -e 's/^"//' -e 's/"$//' ; }
+    /usr/local/bin/clef --configdir /usr/local/var/lib/swarm-clef --stdio-ui init >/dev/null 2>&1 << EOF
+$SECRET
+$SECRET
+EOF
+    /usr/local/bin/clef --keystore /usr/local/var/lib/swarm-clef/keystore --stdio-ui newaccount >/dev/null 2>&1 << EOF
+$SECRET
+EOF
+    /usr/local/bin/clef --keystore /usr/local/var/lib/swarm-clef/keystore --configdir /usr/local/var/lib/swarm-clef --stdio-ui setpw 0x$(parse_json $(cat /usr/local/var/lib/swarm-clef/keystore/*) address) >/dev/null 2>&1 << EOF
+$SECRET
+$SECRET
+$SECRET
+EOF
+    /usr/local/bin/clef --keystore /usr/local/var/lib/swarm-clef/keystore --configdir /usr/local/var/lib/swarm-clef --stdio-ui attest $(shasum -a 256 /usr/local/etc/swarm-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
+$SECRET
+EOF
+fi

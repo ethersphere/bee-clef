@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+if [ "$1" = "install" ]; then
+    if ! getent passwd bee-clef > /dev/null; then
+        useradd -r -d /var/lib/bee-clef -s /sbin/nologin -U bee-clef
+    fi
+    if getent passwd bee > /dev/null; then
+        usermod -a -G bee-clef bee > /dev/null
+    fi
+    if ! test -d /var/lib/bee-clef; then
+        mkdir -p /var/lib/bee-clef/keystore
+        chmod 0750 /var/lib/bee-clef
+        chmod 0700 /var/lib/bee-clef/keystore
+        chown -R bee-clef:bee-clef /var/lib/bee-clef
+    fi
+    if ! test -f /var/lib/bee-clef/password; then
+        < /dev/urandom tr -dc _A-Z-a-z-0-9 2> /dev/null | head -c32 > /var/lib/bee-clef/password
+        chmod 0600 /var/lib/bee-clef/password
+        chown bee-clef:bee-clef /var/lib/bee-clef/password
+    fi
+fi

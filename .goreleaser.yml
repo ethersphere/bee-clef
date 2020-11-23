@@ -1,0 +1,190 @@
+project_name: bee-clef
+
+builds:
+  - id: darwin-amd64
+    main: ./cmd/clef
+    binary: clef
+    dir: go-ethereum
+    goos:
+      - darwin
+    goarch:
+      - amd64
+    env:
+      - CC=o64-clang
+      - CXX=o64-clang++
+    flags:
+      - -v
+      - -trimpath
+    ldflags:
+      - -s -w
+  - id: linux-arm64
+    binary: clef
+    main: ./cmd/clef
+    dir: go-ethereum
+    goos:
+      - linux
+    goarch:
+      - arm64
+    env:
+      - CC=aarch64-linux-gnu-gcc
+      - CXX=aarch64-linux-gnu-g++
+    flags:
+      - -v
+      - -trimpath
+    ldflags:
+      - -s -w
+  - id: linux-armhf
+    main: ./cmd/clef
+    binary: clef
+    dir: go-ethereum
+    goos:
+      - linux
+    goarch:
+      - arm
+    goarm:
+      - 7
+    env:
+      - CC=arm-linux-gnueabihf-gcc
+      - CXX=arm-linux-gnueabihf-g++
+    flags:
+      - -v
+      - -trimpath
+    ldflags:
+      - -s -w
+  - id: linux-amd64
+    main: ./cmd/clef
+    binary: clef
+    dir: go-ethereum
+    goos:
+      - linux
+    goarch:
+      - amd64
+    flags:
+      - -v
+      - -trimpath
+    ldflags:
+      - -s -w
+  - id: windows-amd64
+    main: ./cmd/clef
+    binary: clef
+    dir: go-ethereum
+    goos:
+      - windows
+    goarch:
+      - amd64
+    env:
+      - CC=x86_64-w64-mingw32-gcc
+      - CXX=x86_64-w64-mingw32-g++
+    flags:
+      - -v
+      - -trimpath
+    ldflags:
+      - -s -w
+snapshot:
+  name_template: "{{.Tag}}-snapshot"
+
+archives:
+  - name_template: "{{ tolower .ProjectName }}-{{ tolower .Os }}-{{ tolower .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+
+    format: binary
+  -
+    id: homebrew
+    builds:
+    - darwin-amd64
+    name_template: "{{ tolower .ProjectName }}-{{ tolower .Os }}-{{ tolower .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    files:
+    - packaging/homebrew/swarm-clef
+    - packaging/homebrew/swarm-clef-init
+    - packaging/4byte.json
+    - packaging/rules.js
+    - LICENSE
+    - README.md
+
+nfpms:
+  - file_name_template: "{{ tolower .ProjectName }}_{{ tolower .Version }}_{{ tolower .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+
+    vendor: Ethereum Swarm
+    homepage: https://swarm.ethereum.org/
+
+    maintainer: Swarm Devops <devops@ethswarm.org>
+
+    description: Ethereum Clef
+
+    license: LGPL-3.0
+
+    formats:
+      - deb
+      - rpm
+
+    config_files:
+      "packaging/rules.js": "/etc/bee-clef/rules.js"
+      "packaging/4byte.json": "/etc/bee-clef/4byte.json"
+      "packaging/clef-service": "/usr/bin/clef-service"
+      "packaging/bee-clef.service": "/lib/systemd/system/bee-clef.service"
+
+    overrides:
+      deb:
+        scripts:
+          preinstall: ./packaging/deb/preinst
+          postinstall: ./packaging/deb/postinst
+          preremove: ./packaging/deb/prerm
+          postremove: ./packaging/deb/postrm
+      rpm:
+        scripts:
+          preinstall: ./packaging/rpm/pre
+          postinstall: ./packaging/rpm/post
+          preremove: ./packaging/rpm/preun
+          postremove: ./packaging/rpm/postun
+
+    bindir: /usr/bin
+
+brews:
+  - name: swarm-clef
+    tap:
+      owner: ethersphere
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_PAT }}"
+    ids:
+      - homebrew
+    commit_author:
+      name: bee-worker
+      email: bee-worker@ethswarm.org
+    homepage: https://swarm.ethereum.org/
+    description: Ethereum Clef
+    caveats: |
+        Logs: #{var}/log/swarm-clef/swarm-clef.log
+    test: |
+      system "#{bin}/clef --version"
+    install: |
+      (etc/"swarm-clef").mkpath
+      (var/"lib/swarm-clef").mkpath
+      bin.install ["clef", "packaging/homebrew/swarm-clef", "packaging/homebrew/swarm-clef-init"]
+      etc.install "packaging/4byte.json" => "swarm-clef/4byte.json" unless File.exists? etc/"swarm-clef/4byte.json"
+      etc.install "packaging/rules.js" => "swarm-clef/rules.js" unless File.exists? etc/"swarm-clef/rules.js"
+    post_install: |
+      system("openssl", "rand", "-base64", "32", "-out", var/"lib/swarm-clef/password")
+      system(bin/"swarm-clef-init", ">/dev/null", "2>&1")
+    plist: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{bin}/swarm-clef</string>
+          <string>start</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
+        <string>/usr/local</string>
+        <key>StandardOutPath</key>
+        <string>#{var}/log/swarm-clef/swarm-clef.log</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/swarm-clef/swarm-clef.log</string>
+      </dict>
+      </plist>
