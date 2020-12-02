@@ -21,7 +21,6 @@ release-dry-run:
 		--env-file .release-env \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v `pwd`:/go/src/$(PACKAGE_NAME) \
-		-v `pwd`/sysroot:/sysroot \
 		-w /go/src/$(PACKAGE_NAME) \
 		vandot/golang-cross:${GOLANG_CROSS_VERSION} \
 		--rm-dist --skip-validate --skip-publish
@@ -39,7 +38,7 @@ release:
 		--env-file .release-env \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v `pwd`:/go/src/$(PACKAGE_NAME) \
-		-v `pwd`/sysroot:/sysroot \
+		-v $HOME/.docker/config.json:/root/.docker/config.json \
 		-w /go/src/$(PACKAGE_NAME) \
 		vandot/golang-cross:${GOLANG_CROSS_VERSION} \
 		release --rm-dist
