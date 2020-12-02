@@ -37,8 +37,8 @@ release:
 		-e CGO_ENABLED=1 \
 		--env-file .release-env \
 		-v /var/run/docker.sock:/var/run/docker.sock \
-		-v $(pwd):/go/src/$(PACKAGE_NAME) \
-		-v $(getent passwd $(whoami) | cut -d: -f6)/.docker/config.json:/root/.docker/config.json \
+		-v `pwd`:/go/src/$(PACKAGE_NAME) \
+		-v `getent passwd $(whoami) | cut -d: -f6`/.docker/config.json:/root/.docker/config.json \
 		-w /go/src/$(PACKAGE_NAME) \
 		vandot/golang-cross:${GOLANG_CROSS_VERSION} \
 		release --rm-dist
