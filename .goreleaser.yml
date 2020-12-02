@@ -188,3 +188,30 @@ brews:
         <string>#{var}/log/swarm-clef/swarm-clef.log</string>
       </dict>
       </plist>
+
+dockers:
+  -
+    binaries:
+      - clef
+    builds:
+      - linux-amd64
+    goos: "linux"
+    goarch: "amd64"
+    image_templates:
+      - "ethersphere/clef:{{ .Major }}"
+      - "ethersphere/clef:{{ .Major }}.{{ .Minor }}"
+      - "ethersphere/clef:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+      # - "ethersphere/clef:latest"
+
+    dockerfile: Dockerfile.goreleaser
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+    extra_files:
+      - packaging/rules.js
+      - packaging/4byte.json
+      - packaging/docker/entrypoint.sh
