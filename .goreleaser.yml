@@ -33,24 +33,6 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-  - id: linux-armv6
-    main: ./cmd/clef
-    binary: clef
-    dir: go-ethereum
-    goos:
-      - linux
-    goarch:
-      - arm
-    goarm:
-      - 6
-    env:
-      - CC=arm-linux-gnueabihf-gcc
-      - CXX=arm-linux-gnueabihf-g++
-    flags:
-      - -v
-      - -trimpath
-    ldflags:
-      - -s -w
   - id: linux-armv7
     main: ./cmd/clef
     binary: clef
