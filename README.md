@@ -1,11 +1,28 @@
-bee-clef is official ethereum clef binary wrapped and preconfigured for bee as a service.
+# What
 
-it's a really opinionated setup that probably only fits bee.
+[*clef*](https://github.com/ethereum/go-ethereum/tree/master/cmd/clef)
+is the [Go Ethereum client](https://github.com/ethereum/go-ethereum/)'s
+external signer (an external service that signs transactions).
 
-it's being used by bee as a external signer.
+[*bee-clef*](https://github.com/ethersphere/bee-clef) starts up a
+custom `clef` instance that is preconfigured to be suitable for
+[bee](https://github.com/ethersphere/bee)'s automated operation.
 
-deb and rpm packages are built with support for amd64 and amrhf archs.
+This repo contains the source files for building packages for various
+package managers and platforms.
 
-download package from release page and install it with `dpkg` or `yum`.
+# How
 
-for easier integration with bee first install `bee-clef` package and only after that `bee`.
+It takes the original `clef` binary and starts it up as a service
+with a special configuration that is probably only suitable for `bee`.
+
+`bee` can be configured to use with other external signers, but
+`bee-clef` is probably not interesting outside the scope of being an
+external signer service for `bee`.
+
+# Install
+
+You probably want to follow the
+[Swarm Bee manual](https://docs.ethswarm.org/docs/),
+or head straight to the
+[release download page](https://github.com/ethersphere/bee-clef/releases).
