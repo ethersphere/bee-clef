@@ -119,7 +119,8 @@ nfpms:
     config_files:
       "packaging/rules.js": "/etc/bee-clef/rules.js"
       "packaging/4byte.json": "/etc/bee-clef/4byte.json"
-      "packaging/clef-service": "/usr/bin/clef-service"
+      "packaging/bee-clef-keys": "/usr/bin/bee-clef-keys"
+      "packaging/bee-clef-service": "/usr/bin/bee-clef-service"
       "packaging/bee-clef.service": "/lib/systemd/system/bee-clef.service"
 
     overrides:
@@ -158,7 +159,7 @@ brews:
     install: |
       (etc/"swarm-clef").mkpath
       (var/"lib/swarm-clef").mkpath
-      bin.install ["clef", "packaging/homebrew/swarm-clef", "packaging/homebrew/swarm-clef-init"]
+      bin.install ["clef", "packaging/homebrew/swarm-clef", "packaging/homebrew/swarm-clef-init", "packaging/homebrew/swarm-clef-keys"]
       etc.install "packaging/4byte.json" => "swarm-clef/4byte.json" unless File.exists? etc/"swarm-clef/4byte.json"
       etc.install "packaging/rules.js" => "swarm-clef/rules.js" unless File.exists? etc/"swarm-clef/rules.js"
     post_install: |

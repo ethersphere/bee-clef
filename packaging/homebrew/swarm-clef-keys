@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+_USER=$(whoami)
+_GROUP=$(id -gn)
+_HOME=$(eval echo ~$USER)
+_DIR=/usr/local/var/lib/swarm-clef
+
+sudo sh -c "install -o ${_USER} -g ${_GROUP} ${_DIR}/keystore/$(sudo ls -1 ${_DIR}/keystore/ | head -1) ${_HOME}/bee-clef-key.json"
+sudo sh -c "cat /var/lib/bee-clef/password | pbcopy"
+
+exit 0
