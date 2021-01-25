@@ -6,6 +6,6 @@ _HOME=$(eval echo ~$USER)
 _DIR=/var/lib/bee-clef
 
 sudo sh -c "install -o ${_USER} -g ${_GROUP} ${_DIR}/keystore/$(sudo ls -1 ${_DIR}/keystore/ | head -1) ${_HOME}/bee-clef-key.json"
-sudo sh -c "cat /var/lib/bee-clef/password | xclip -selection c"
+sudo sh -c "cat ${_DIR}/password | xclip -selection c"
 
 exit 0
