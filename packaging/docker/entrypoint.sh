@@ -34,7 +34,7 @@ run() {
 ( sleep 1; cat << EOF
 { "jsonrpc": "2.0", "id":1, "result": { "text":"$SECRET" } }
 EOF
-) | /usr/local/bin/clef --stdio-ui --keystore "$DATA"/keystore --configdir "$DATA" --chainid "$CHAINID" --http --http.addr 0.0.0.0 --http.port 8550 --http.vhosts localhost,clef --rules /app/config/rules.js --nousb --ipcdisable --4bytedb-custom /app/config/4byte.json --pcscdpath "" --auditlog "" --loglevel 3
+) | /usr/local/bin/clef --stdio-ui --keystore "$DATA"/keystore --configdir "$DATA" --chainid "$CHAINID" --http --http.addr 0.0.0.0 --http.port 8550 --http.vhosts * --rules /app/config/rules.js --nousb --ipcdisable --4bytedb-custom /app/config/4byte.json --pcscdpath "" --auditlog "" --loglevel 3
 }
 
 full() {
