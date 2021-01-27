@@ -95,6 +95,7 @@ archives:
     files:
     - packaging/homebrew/swarm-clef
     - packaging/homebrew/swarm-clef-init
+    - packaging/homebrew/swarm-clef-keys
     - packaging/4byte.json
     - packaging/rules.js
     - LICENSE
