@@ -16,7 +16,7 @@ package managers and platforms.
 It takes the original `clef` binary and starts it up as a service
 with a special configuration that is probably only suitable for `bee`.
 
-`bee` can be configured to use with other external signers, but
+`bee` can be configured to use other external signers, but
 `bee-clef` is probably not interesting outside the scope of being an
 external signer service for `bee`.
 
