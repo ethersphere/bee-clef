@@ -8,7 +8,7 @@ _DATE=$(date +%s)
 
 sudo sh -c "install -o ${_USER} -g ${_GROUP} ${_DIR}/keystore/$(sudo ls -1 ${_DIR}/keystore/ | head -1) ${_HOME}/bee-clef-key-${_DATE}.json"
 sudo sh -c "cat ${_DIR}/password | xclip -selection c"
-echo "Key copied to HOME folder with name bee-clef-key-${_DATE}.json"
-echo "Password loaded into clipboard ready to be pasted"
+echo "Key exported to ${_HOME}/bee-clef-key-${_DATE}.json"
+echo "Password loaded into clipboard and ready to be pasted"
 
 exit 0

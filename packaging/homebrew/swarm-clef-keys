@@ -6,9 +6,9 @@ _HOME=$(eval echo ~$USER)
 _DIR=/usr/local/var/lib/swarm-clef
 _DATE=$(date +%s)
 
-sudo sh -c "install -o ${_USER} -g ${_GROUP} ${_DIR}/keystore/$(sudo ls -1 ${_DIR}/keystore/ | head -1) ${_HOME}/swarm-clef-key-${_DATE}.json"
-sudo sh -c "cat ${_DIR}/password | pbcopy"
-echo "Key copied to HOME folder with name swarm-clef-key-${_DATE}.json"
-echo "Password loaded into clipboard ready to be pasted"
+install -o "${_USER}" -g "${_GROUP}" "${_DIR}"/keystore/"$(ls -1 "${_DIR}"/keystore/ | head -1)" "${_HOME}"/swarm-clef-key-"${_DATE}".json
+cat "${_DIR}"/password | pbcopy
+echo "Key exported to ${_HOME}/bee-clef-key-${_DATE}.json"
+echo "Password loaded into clipboard and ready to be pasted"
 
 exit 0
