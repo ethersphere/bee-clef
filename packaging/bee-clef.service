@@ -1,14 +1,14 @@
 [Unit]
 Description=Bee Clef
-Documentation=https://swarm-gateways.net/bzz:/docs.swarm.eth/
+Documentation=https://docs.ethswarm.org
 After=network.target
 
 [Service]
 NoNewPrivileges=true
 User=bee-clef
 Group=bee-clef
-ExecStart=/usr/bin/clef-service start
-ExecStop=/usr/bin/clef-service stop
+ExecStart=/usr/bin/bee-clef-service start
+ExecStop=/usr/bin/bee-clef-service stop
 Restart=on-failure
 RestartSec=5s
 
