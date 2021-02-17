@@ -1,23 +1,23 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 start() {
     KEYSTORE=/usr/local/var/lib/swarm-clef/keystore
     CONFIGDIR=/usr/local/var/lib/swarm-clef
     CHAINID=5
     SECRET=$(cat /usr/local/var/lib/swarm-clef/password)
-    rm /tmp/stdin /tmp/stdout || true
-    mkfifo /tmp/stdin /tmp/stdout
+    rm /usr/local/var/lib/swarm-clef/stdin /usr/local/var/lib/swarm-clef/stdout || true
+    mkfifo /usr/local/var/lib/swarm-clef/stdin /usr/local/var/lib/swarm-clef/stdout
     (
-    exec 3>/tmp/stdin
-    while read < /tmp/stdout
+    exec 3>/usr/local/var/lib/swarm-clef/stdin
+    while read < /usr/local/var/lib/swarm-clef/stdout
     do
         if [[ "$REPLY" =~ "enter the password" ]]; then
-            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > /tmp/stdin
+            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > /usr/local/var/lib/swarm-clef/stdin
             break
         fi
     done
     ) &
-    /usr/local/bin/clef --stdio-ui --keystore $KEYSTORE --configdir $CONFIGDIR --chainid $CHAINID --rules /usr/local/etc/swarm-clef/rules.js --nousb --4bytedb-custom /usr/local/etc/swarm-clef/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath /usr/local/var/lib/swarm-clef < /tmp/stdin | tee /tmp/stdout
+    /usr/local/bin/clef --stdio-ui --keystore $KEYSTORE --configdir $CONFIGDIR --chainid $CHAINID --rules /usr/local/etc/swarm-clef/rules.js --nousb --4bytedb-custom /usr/local/etc/swarm-clef/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath /usr/local/var/lib/swarm-clef < /usr/local/var/lib/swarm-clef/stdin | tee /usr/local/var/lib/swarm-clef/stdout
 }
 
 stop() {
