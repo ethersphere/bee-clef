@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 start() {
     KEYSTORE=/var/lib/bee-clef/keystore
@@ -6,11 +6,20 @@ start() {
     CHAINID=5
     SECRET=$(cat /var/lib/bee-clef/password)
     # clef with every start sets permissions back to 600
-    (sleep 4; chmod 660 /var/lib/bee-clef/clef.ipc) &
-    ( sleep 2; cat << EOF
-{ "jsonrpc": "2.0", "id":1, "result": { "text":"$SECRET" } }
-EOF
-) | clef --stdio-ui --keystore $KEYSTORE --configdir $CONFIGDIR --chainid $CHAINID --rules /etc/bee-clef/rules.js --nousb --4bytedb-custom /etc/bee-clef/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath /var/lib/bee-clef
+    (while [ ! -f /var/lib/bee-clef/clef.ipc ]; do sleep 1; done && chmod 660 /var/lib/bee-clef/clef.ipc) &
+    rm /tmp/stdin /tmp/stdout || true
+    mkfifo /tmp/stdin /tmp/stdout
+    (
+    exec 3>/tmp/stdin
+    while read < /tmp/stdout
+    do
+        if [[ "$REPLY" =~ "enter the password" ]]; then
+            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > /tmp/stdin
+            break
+        fi
+    done
+    ) &
+    clef --stdio-ui --keystore $KEYSTORE --configdir $CONFIGDIR --chainid $CHAINID --rules /etc/bee-clef/rules.js --nousb --4bytedb-custom /etc/bee-clef/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath /var/lib/bee-clef < /tmp/stdin | tee /tmp/stdout
 }
 
 stop() {
