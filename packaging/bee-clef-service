@@ -14,8 +14,12 @@ start() {
     SECRET=$(cat ${PASSWORD_FILE})
     CHAINID=5
     # clef with every start sets permissions back to 600
-    (while [ ! -f ${DATA_DIR}/clef.ipc ]; do sleep 1; done && chmod 660 ${DATA_DIR}/clef.ipc) &
-    rm ${DATA_DIR}/stdin ${DATA_DIR}/stdout || true
+    rm --force ${DATA_DIR}/clef.ipc || true
+    (while [ ! -e ${DATA_DIR}/clef.ipc ]; do
+         echo "Waiting for the clef.ipc file to show up at ${DATA_DIR}/clef.ipc"
+         sleep 1
+     done && chmod 660 ${DATA_DIR}/clef.ipc) &
+    rm --force ${DATA_DIR}/stdin ${DATA_DIR}/stdout || true
     mkfifo ${DATA_DIR}/stdin ${DATA_DIR}/stdout
     (
     exec 3>${DATA_DIR}/stdin
