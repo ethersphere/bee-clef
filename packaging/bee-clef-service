@@ -1,25 +1,37 @@
 #!/usr/bin/env bash
 
 start() {
-    KEYSTORE=/var/lib/bee-clef/keystore
-    CONFIGDIR=/var/lib/bee-clef
+    if [ -z "${DATA_DIR}" ]; then
+        DATA_DIR=/var/lib/bee-clef
+    fi
+    if [ -z "${PASSWORD_FILE}" ]; then
+        PASSWORD_FILE=${DATA_DIR}/password
+    fi
+
+    echo "bee-clef-service ${DATA_DIR} ${PASSWORD_FILE} ${CONFIG_DIR}"
+
+    KEYSTORE=${DATA_DIR}/keystore
+    SECRET=$(cat ${PASSWORD_FILE})
     CHAINID=5
-    SECRET=$(cat /var/lib/bee-clef/password)
     # clef with every start sets permissions back to 600
-    (while [ ! -f /var/lib/bee-clef/clef.ipc ]; do sleep 1; done && chmod 660 /var/lib/bee-clef/clef.ipc) &
-    rm /var/lib/bee-clef/stdin /var/lib/bee-clef/stdout || true
-    mkfifo /var/lib/bee-clef/stdin /var/lib/bee-clef/stdout
+    rm --force ${DATA_DIR}/clef.ipc || true
+    (while [ ! -e ${DATA_DIR}/clef.ipc ]; do
+         echo "Waiting for the clef.ipc file to show up at ${DATA_DIR}/clef.ipc"
+         sleep 1
+     done && chmod 660 ${DATA_DIR}/clef.ipc) &
+    rm --force ${DATA_DIR}/stdin ${DATA_DIR}/stdout || true
+    mkfifo ${DATA_DIR}/stdin ${DATA_DIR}/stdout
     (
-    exec 3>/var/lib/bee-clef/stdin
-    while read < /var/lib/bee-clef/stdout
+    exec 3>${DATA_DIR}/stdin
+    while read < ${DATA_DIR}/stdout
     do
         if [[ "$REPLY" =~ "enter the password" ]]; then
-            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > /var/lib/bee-clef/stdin
+            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > ${DATA_DIR}/stdin
             break
         fi
     done
     ) &
-    clef --stdio-ui --keystore $KEYSTORE --configdir $CONFIGDIR --chainid $CHAINID --rules /etc/bee-clef/rules.js --nousb --4bytedb-custom /etc/bee-clef/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath /var/lib/bee-clef < /var/lib/bee-clef/stdin | tee /var/lib/bee-clef/stdout
+    clef --stdio-ui --keystore $KEYSTORE --configdir ${DATA_DIR} --chainid $CHAINID --rules ${CONFIG_DIR}/rules.js --nousb --4bytedb-custom ${CONFIG_DIR}/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath ${DATA_DIR} < ${DATA_DIR}/stdin | tee ${DATA_DIR}/stdout
 }
 
 stop() {
