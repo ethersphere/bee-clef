@@ -7,7 +7,7 @@ if [ "$(ls -A /usr/local/var/lib/swarm-clef/keystore 2> /dev/null)" = "" ]; then
 $SECRET
 $SECRET
 EOF
-    /usr/local/bin/clef --keystore /usr/local/var/lib/swarm-clef/keystore --stdio-ui newaccount >/dev/null 2>&1 << EOF
+    /usr/local/bin/clef --keystore /usr/local/var/lib/swarm-clef/keystore --stdio-ui newaccount --lightkdf >/dev/null 2>&1 << EOF
 $SECRET
 EOF
     /usr/local/bin/clef --keystore /usr/local/var/lib/swarm-clef/keystore --configdir /usr/local/var/lib/swarm-clef --stdio-ui setpw 0x$(parse_json $(cat /usr/local/var/lib/swarm-clef/keystore/*) address) >/dev/null 2>&1 << EOF

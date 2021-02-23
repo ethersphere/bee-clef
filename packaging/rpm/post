@@ -6,7 +6,7 @@ if [ $1 -eq 1 ] ; then
 $SECRET
 $SECRET
 EOF
-    clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount >/dev/null 2>&1 << EOF
+    clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount --lightkdf >/dev/null 2>&1 << EOF
 $SECRET
 EOF
     clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x$(parse_json $(cat /var/lib/bee-clef/keystore/*) address) >/dev/null 2>&1 << EOF
