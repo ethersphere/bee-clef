@@ -24,7 +24,7 @@ jobs:
         with:
           repository: ethereum/go-ethereum
           path: go-ethereum
-          ref: v1.9.24
+          ref: v1.9.25
       - run: git fetch --prune --unshallow
       - name: Setup release environment
         if: success() && startsWith(github.ref, 'refs/tags/v')

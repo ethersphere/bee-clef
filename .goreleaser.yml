@@ -192,28 +192,84 @@ brews:
       </plist>
 
 dockers:
-  -
-    binaries:
-      - clef
-    builds:
-      - linux-amd64
-    goos: "linux"
-    goarch: "amd64"
-    image_templates:
-      - "ethersphere/clef:{{ .Major }}"
-      - "ethersphere/clef:{{ .Major }}.{{ .Minor }}"
-      - "ethersphere/clef:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
-      - "ethersphere/clef:latest"
-
-    dockerfile: Dockerfile.goreleaser
-    build_flag_templates:
-      - "--pull"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-
-    extra_files:
-      - packaging/rules.js
-      - packaging/4byte.json
-      - packaging/docker/entrypoint.sh
+- image_templates:
+  - "ethersphere/clef:{{ .Version }}-amd64"
+  use_buildx: true
+  ids:
+    - linux-amd64
+  goarch: amd64
+  dockerfile: Dockerfile.goreleaser
+  build_flag_templates:
+  - "--platform=linux/amd64"
+  - "--pull"
+  - "--label=org.opencontainers.image.created={{.Date}}"
+  - "--label=org.opencontainers.image.title={{.ProjectName}}"
+  - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+  - "--label=org.opencontainers.image.version={{.Version}}"
+  extra_files:
+    - packaging/rules.js
+    - packaging/4byte.json
+    - packaging/docker/entrypoint.sh
+- image_templates:
+  - "ethersphere/clef:{{ .Version }}-armv7"
+  use_buildx: true
+  ids:
+    - linux-armv7
+  goarch: arm
+  goarm: 7
+  dockerfile: Dockerfile.goreleaser
+  build_flag_templates:
+  - "--platform=linux/arm/v7"
+  - "--pull"
+  - "--label=org.opencontainers.image.created={{.Date}}"
+  - "--label=org.opencontainers.image.title={{.ProjectName}}"
+  - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+  - "--label=org.opencontainers.image.version={{.Version}}"
+  extra_files:
+    - packaging/rules.js
+    - packaging/4byte.json
+    - packaging/docker/entrypoint.sh
+- image_templates:
+  - "ethersphere/clef:{{ .Version }}-arm64v8"
+  use_buildx: true
+  ids:
+    - linux-arm64
+  goarch: arm64
+  dockerfile: Dockerfile.goreleaser
+  build_flag_templates:
+  - "--platform=linux/arm64/v8"
+  - "--pull"
+  - "--label=org.opencontainers.image.created={{.Date}}"
+  - "--label=org.opencontainers.image.title={{.ProjectName}}"
+  - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+  - "--label=org.opencontainers.image.version={{.Version}}"
+  extra_files:
+    - packaging/rules.js
+    - packaging/4byte.json
+    - packaging/docker/entrypoint.sh
+docker_manifests:
+- name_template: ethersphere/clef:{{ .Major }}
+  image_templates:
+  - ethersphere/clef:{{ .Version }}-amd64
+  - ethersphere/clef:{{ .Version }}-armv7
+  - ethersphere/clef:{{ .Version }}-arm64v8
+- name_template: ethersphere/clef:{{ .Major }}.{{ .Minor }}
+  image_templates:
+  - ethersphere/clef:{{ .Version }}-amd64
+  - ethersphere/clef:{{ .Version }}-armv7
+  - ethersphere/clef:{{ .Version }}-arm64v8
+- name_template: ethersphere/clef:{{ .Major }}.{{ .Minor }}.{{ .Patch }}
+  image_templates:
+  - ethersphere/clef:{{ .Version }}-amd64
+  - ethersphere/clef:{{ .Version }}-armv7
+  - ethersphere/clef:{{ .Version }}-arm64v8
+- name_template: ethersphere/clef:latest
+  image_templates:
+  - ethersphere/clef:{{ .Version }}-amd64
+  - ethersphere/clef:{{ .Version }}-armv7
+  - ethersphere/clef:{{ .Version }}-arm64v8
+- name_template: ethersphere/clef:beta
+  image_templates:
+  - ethersphere/clef:{{ .Version }}-amd64
+  - ethersphere/clef:{{ .Version }}-armv7
+  - ethersphere/clef:{{ .Version }}-arm64v8
