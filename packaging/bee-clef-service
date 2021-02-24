@@ -31,7 +31,7 @@ start() {
         fi
     done
     ) &
-    clef --stdio-ui --keystore $KEYSTORE --configdir ${DATA_DIR} --chainid $CHAINID --rules ${CONFIG_DIR}/rules.js --nousb --4bytedb-custom ${CONFIG_DIR}/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath ${DATA_DIR} < ${DATA_DIR}/stdin | tee ${DATA_DIR}/stdout
+    clef --stdio-ui --keystore $KEYSTORE --configdir ${DATA_DIR} --chainid $CHAINID --rules ${CONFIG_DIR}/rules.js --nousb --lightkdf --4bytedb-custom ${CONFIG_DIR}/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath ${DATA_DIR} < ${DATA_DIR}/stdin | tee ${DATA_DIR}/stdout
 }
 
 stop() {
