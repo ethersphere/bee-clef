@@ -15,7 +15,7 @@ $SECRET
 $SECRET
 EOF
     if [ "$(ls -A "$DATA"/keystore 2> /dev/null)" = "" ]; then
-        /usr/local/bin/clef --keystore "$DATA"/keystore --stdio-ui newaccount >/dev/null 2>&1 << EOF
+        /usr/local/bin/clef --keystore "$DATA"/keystore --stdio-ui newaccount --lightkdf >/dev/null 2>&1 << EOF
 $SECRET
 EOF
     fi
