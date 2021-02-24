@@ -164,7 +164,9 @@ brews:
       etc.install "packaging/4byte.json" => "swarm-clef/4byte.json" unless File.exists? etc/"swarm-clef/4byte.json"
       etc.install "packaging/rules.js" => "swarm-clef/rules.js" unless File.exists? etc/"swarm-clef/rules.js"
     post_install: |
-      system("if", "[", "!", "-f", var/"lib/swarm-clef/password", "];", "then", "openssl", "rand", "-base64", "32", "-out", var/"lib/swarm-clef/password;", "fi")
+      unless File.exists? "#{var}/lib/swarm-clef/password"
+      system("openssl", "rand", "-out", var/"lib/swarm-clef/password", "-base64", "32")
+      end
       system(bin/"swarm-clef-init", ">/dev/null", "2>&1")
     plist: |
       <?xml version="1.0" encoding="UTF-8"?>
