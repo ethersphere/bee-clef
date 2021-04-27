@@ -23,6 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           repository: ethereum/go-ethereum
           path: go-ethereum
           ref: v1.9.25
