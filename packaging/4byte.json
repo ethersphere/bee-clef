@@ -3,5 +3,6 @@
   "576d7271": "deploySimpleSwap(address,uint256)",
   "15efd8a7": "deploySimpleSwap(address,uint256,bytes32)",
   "2e1a7d4d": "withdraw(uint256)",
-  "e9563f05": "createBatch(address,uint256,uint8,bytes32)"
+  "e9563f05": "createBatch(address,uint256,uint8,bytes32)",
+  "5239af71": "createBatch(address,uint256,uint8,uint8,bytes32,bool)"
 }
