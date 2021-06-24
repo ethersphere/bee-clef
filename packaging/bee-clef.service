@@ -4,6 +4,7 @@ Documentation=https://docs.ethswarm.org
 After=network.target
 
 [Service]
+EnvironmentFile=-/etc/default/bee-clef
 NoNewPrivileges=true
 User=bee-clef
 Group=bee-clef

@@ -98,6 +98,7 @@ archives:
     - packaging/homebrew/swarm-clef-keys
     - packaging/4byte.json
     - packaging/rules.js
+    - packaging/default
     - LICENSE
     - README.md
 
@@ -117,12 +118,22 @@ nfpms:
       - deb
       - rpm
 
-    config_files:
-      "packaging/rules.js": "/etc/bee-clef/rules.js"
-      "packaging/4byte.json": "/etc/bee-clef/4byte.json"
-      "packaging/bee-clef-keys": "/usr/bin/bee-clef-keys"
-      "packaging/bee-clef-service": "/usr/bin/bee-clef-service"
-      "packaging/bee-clef.service": "/lib/systemd/system/bee-clef.service"
+    contents:
+      - src: packaging/default
+        dst: /etc/default/bee-clef
+        type: config
+      - src: packaging/rules.js        
+        dst: /etc/bee-clef/rules.js
+        type: config
+      - src: packaging/4byte.json        
+        dst: /etc/bee-clef/4byte.json
+        type: config
+      - src: packaging/bee-clef-keys        
+        dst: /usr/bin/bee-clef-keys
+      - src: packaging/bee-clef-service        
+        dst: /usr/bin/bee-clef-service
+      - src: packaging/bee-clef.service        
+        dst: /lib/systemd/system/bee-clef.service
 
     overrides:
       deb:
@@ -161,6 +172,7 @@ brews:
       (etc/"swarm-clef").mkpath
       (var/"lib/swarm-clef").mkpath
       bin.install ["clef", "packaging/homebrew/swarm-clef", "packaging/homebrew/swarm-clef-init", "packaging/homebrew/swarm-clef-keys"]
+      etc.install "packaging/default" => "swarm-clef/default" unless File.exists? etc/"swarm-clef/default"
       etc.install "packaging/4byte.json" => "swarm-clef/4byte.json" unless File.exists? etc/"swarm-clef/4byte.json"
       etc.install "packaging/rules.js" => "swarm-clef/rules.js" unless File.exists? etc/"swarm-clef/rules.js"
     post_install: |
