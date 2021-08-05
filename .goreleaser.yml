@@ -3,7 +3,7 @@ project_name: bee-clef
 builds:
   - id: darwin-amd64
     main: ./cmd/clef
-    binary: clef
+    binary: bee-clef
     dir: go-ethereum
     goos:
       - darwin
@@ -18,7 +18,7 @@ builds:
     ldflags:
       - -s -w
   - id: linux-arm64
-    binary: clef
+    binary: bee-clef
     main: ./cmd/clef
     dir: go-ethereum
     goos:
@@ -35,7 +35,7 @@ builds:
       - -s -w
   - id: linux-armv7
     main: ./cmd/clef
-    binary: clef
+    binary: bee-clef
     dir: go-ethereum
     goos:
       - linux
@@ -53,7 +53,7 @@ builds:
       - -s -w
   - id: linux-amd64
     main: ./cmd/clef
-    binary: clef
+    binary: bee-clef
     dir: go-ethereum
     goos:
       - linux
@@ -66,7 +66,7 @@ builds:
       - -s -w
   - id: windows-amd64
     main: ./cmd/clef
-    binary: clef
+    binary: bee-clef
     dir: go-ethereum
     goos:
       - windows
@@ -167,11 +167,11 @@ brews:
     caveats: |
         Logs: #{var}/log/swarm-clef/swarm-clef.log
     test: |
-      system "#{bin}/clef --version"
+      system "#{bin}/bee-clef --version"
     install: |
       (etc/"swarm-clef").mkpath
       (var/"lib/swarm-clef").mkpath
-      bin.install ["clef", "packaging/homebrew/swarm-clef", "packaging/homebrew/swarm-clef-init", "packaging/homebrew/swarm-clef-keys"]
+      bin.install ["bee-clef", "packaging/homebrew/swarm-clef", "packaging/homebrew/swarm-clef-init", "packaging/homebrew/swarm-clef-keys"]
       etc.install "packaging/default" => "swarm-clef/default" unless File.exists? etc/"swarm-clef/default"
       etc.install "packaging/4byte.json" => "swarm-clef/4byte.json" unless File.exists? etc/"swarm-clef/4byte.json"
       etc.install "packaging/rules.js" => "swarm-clef/rules.js" unless File.exists? etc/"swarm-clef/rules.js"

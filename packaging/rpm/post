@@ -2,19 +2,19 @@ if [ $1 -eq 1 ] ; then
     # Initial installation
     SECRET=$(cat /var/lib/bee-clef/password)
     parse_json() { echo $1|sed -e 's/[{}]/''/g'|sed -e 's/", "/'\",\"'/g'|sed -e 's/" ,"/'\",\"'/g'|sed -e 's/" , "/'\",\"'/g'|sed -e 's/","/'\"---SEPERATOR---\"'/g'|awk -F=':' -v RS='---SEPERATOR---' "\$1~/\"$2\"/ {print}"|sed -e "s/\"$2\"://"|tr -d "\n\t"|sed -e 's/\\"/"/g'|sed -e 's/\\\\/\\/g'|sed -e 's/^[ \t]*//g'|sed -e 's/^"//' -e 's/"$//' ; }
-    clef --configdir /var/lib/bee-clef --stdio-ui init >/dev/null 2>&1 << EOF
+    bee-clef --configdir /var/lib/bee-clef --stdio-ui init >/dev/null 2>&1 << EOF
 $SECRET
 $SECRET
 EOF
-    clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount --lightkdf >/dev/null 2>&1 << EOF
+    bee-clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount --lightkdf >/dev/null 2>&1 << EOF
 $SECRET
 EOF
-    clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x$(parse_json $(cat /var/lib/bee-clef/keystore/*) address) >/dev/null 2>&1 << EOF
+    bee-clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x$(parse_json $(cat /var/lib/bee-clef/keystore/*) address) >/dev/null 2>&1 << EOF
 $SECRET
 $SECRET
 $SECRET
 EOF
-    clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui attest $(sha256sum /etc/bee-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
+    bee-clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui attest $(sha256sum /etc/bee-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
 $SECRET
 EOF
     chown -R bee-clef:bee-clef /var/lib/bee-clef

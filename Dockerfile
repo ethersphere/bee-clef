@@ -17,7 +17,7 @@ FROM debian:10.2-slim as runtime
 
 RUN mkdir -p /app/data && chown nobody:nogroup /app/data
 
-COPY --from=build /go/go-ethereum/build/bin/clef /usr/local/bin/clef
+COPY --from=build /go/go-ethereum/build/bin/clef /usr/local/bin/bee-clef
 COPY packaging/rules.js /app/config/rules.js
 COPY packaging/4byte.json /app/config/4byte.json
 COPY packaging/docker/entrypoint.sh /entrypoint.sh
