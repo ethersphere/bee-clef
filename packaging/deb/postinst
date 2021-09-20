@@ -2,24 +2,43 @@
 
 if [ "$1" = "configure" ]; then
     if [ -z "$2" ]; then
-        SECRET=$(cat /var/lib/bee-clef/password)
-        parse_json() { echo $1|sed -e 's/[{}]/''/g'|sed -e 's/", "/'\",\"'/g'|sed -e 's/" ,"/'\",\"'/g'|sed -e 's/" , "/'\",\"'/g'|sed -e 's/","/'\"---SEPERATOR---\"'/g'|awk -F=':' -v RS='---SEPERATOR---' "\$1~/\"$2\"/ {print}"|sed -e "s/\"$2\"://"|tr -d "\n\t"|sed -e 's/\\"/"/g'|sed -e 's/\\\\/\\/g'|sed -e 's/^[ \t]*//g'|sed -e 's/^"//' -e 's/"$//' ; }
+        TOTAL_ACCOUNTS=${BEE_CLEF_TOTAL_ACCOUNTS:-1}
+        MASTER_SECRET=$(cat /var/lib/bee-clef/password)
         bee-clef --configdir /var/lib/bee-clef --stdio-ui init >/dev/null 2>&1 << EOF
-$SECRET
+$MASTER_SECRET
+$MASTER_SECRET
+EOF
+        number=0
+        while [ $number -lt "${TOTAL_ACCOUNTS}" ] 
+        do
+            SECRET=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 2> /dev/null | head -c32)
+            ACCOUNT=$({
+            bee-clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount --lightkdf 2>/dev/null << EOF
 $SECRET
 EOF
-        bee-clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount --lightkdf >/dev/null 2>&1 << EOF
+} | tail -n -1 | cut -d'x' -f2 | tr '[:upper:]' '[:lower:]')
+            bee-clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x"${ACCOUNT}" >/dev/null 2>&1 << EOF
 $SECRET
+$SECRET
+$MASTER_SECRET
 EOF
-        bee-clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x$(parse_json $(cat /var/lib/bee-clef/keystore/*) address) >/dev/null 2>&1 << EOF
-$SECRET
-$SECRET
-$SECRET
-EOF
+            if [ $number -lt 10 ] && [ $TOTAL_ACCOUNTS -gt 9 ]; then
+                FILENAME=bee-0"${number}"_"${ACCOUNT}"
+            else
+                FILENAME=bee-"${number}"_"${ACCOUNT}"
+            fi
+            printf '%s' "${SECRET}" > /var/lib/bee-clef/passwords/"${FILENAME}"
+            chmod 0600 /var/lib/bee-clef/passwords/"${FILENAME}"
+            chown bee-clef:bee-clef /var/lib/bee-clef/passwords/"${FILENAME}"
+            number=$((number+1))
+        done
         bee-clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui attest $(sha256sum /etc/bee-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
-$SECRET
+$MASTER_SECRET
 EOF
         chown -R bee-clef:bee-clef /var/lib/bee-clef
+        echo "Accounts initilized, configure bee with coresponding address value"
+        ls -1 /var/lib/bee-clef/passwords
+        echo
     fi
     deb-systemd-helper unmask bee-clef.service >/dev/null || true
 

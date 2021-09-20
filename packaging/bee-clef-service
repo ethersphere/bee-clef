@@ -14,7 +14,7 @@ start() {
     echo "bee-clef-service ${DATA_DIR} ${PASSWORD_FILE} ${CONFIG_DIR}"
 
     KEYSTORE=${DATA_DIR}/keystore
-    SECRET=$(cat ${PASSWORD_FILE})
+    MASTER_SECRET=$(cat ${PASSWORD_FILE})
     CHAINID=${BEE_CLEF_CHAIN_ID:-5}
     # clef with every start sets permissions back to 600
     rm --force ${DATA_DIR}/clef.ipc || true
@@ -29,7 +29,7 @@ start() {
     while read < ${DATA_DIR}/stdout
     do
         if [[ "$REPLY" =~ "enter the password" ]]; then
-            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > ${DATA_DIR}/stdin
+            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$MASTER_SECRET"'" } }' > ${DATA_DIR}/stdin
             break
         fi
     done

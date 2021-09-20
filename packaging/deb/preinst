@@ -9,8 +9,10 @@ if [ "$1" = "install" ]; then
     fi
     if ! test -d /var/lib/bee-clef; then
         mkdir -p /var/lib/bee-clef/keystore
+        mkdir -p /var/lib/bee-clef/passwords
         chmod 0750 /var/lib/bee-clef
         chmod 0700 /var/lib/bee-clef/keystore
+        chmod 0700 /var/lib/bee-clef/passwords
         chown -R bee-clef:bee-clef /var/lib/bee-clef
     fi
     if ! test -f /var/lib/bee-clef/password; then
