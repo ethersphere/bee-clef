@@ -1,5 +1,8 @@
 project_name: bee-clef
 
+release:
+  prerelease: auto
+
 builds:
   - id: darwin-amd64
     main: ./cmd/clef
