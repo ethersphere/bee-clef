@@ -270,12 +270,14 @@ docker_manifests:
   - ethersphere/clef:{{ .Version }}-amd64
   - ethersphere/clef:{{ .Version }}-armv7
   - ethersphere/clef:{{ .Version }}-arm64v8
+  skip_push: auto
 - name_template: ethersphere/clef:{{ .Major }}.{{ .Minor }}
   image_templates:
   - ethersphere/clef:{{ .Version }}-amd64
   - ethersphere/clef:{{ .Version }}-armv7
   - ethersphere/clef:{{ .Version }}-arm64v8
-- name_template: ethersphere/clef:{{ .Major }}.{{ .Minor }}.{{ .Patch }}
+  skip_push: auto
+- name_template: ethersphere/clef:{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{ . }}{{ end }}
   image_templates:
   - ethersphere/clef:{{ .Version }}-amd64
   - ethersphere/clef:{{ .Version }}-armv7
@@ -290,3 +292,4 @@ docker_manifests:
   - ethersphere/clef:{{ .Version }}-amd64
   - ethersphere/clef:{{ .Version }}-armv7
   - ethersphere/clef:{{ .Version }}-arm64v8
+  skip_push: auto
