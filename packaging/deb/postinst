@@ -4,7 +4,7 @@ if [ "$1" = "configure" ]; then
     if [ -z "$2" ]; then
         TOTAL_ACCOUNTS=${BEE_CLEF_TOTAL_ACCOUNTS:-1}
         MASTER_SECRET=$(cat /var/lib/bee-clef/password)
-        clef --configdir /var/lib/bee-clef --stdio-ui init >/dev/null 2>&1 << EOF
+        bee-clef --configdir /var/lib/bee-clef --stdio-ui init >/dev/null 2>&1 << EOF
 $MASTER_SECRET
 $MASTER_SECRET
 EOF
@@ -13,11 +13,11 @@ EOF
         do
             SECRET=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 2> /dev/null | head -c32)
             ACCOUNT=$({
-            clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount --lightkdf 2>/dev/null << EOF
+            bee-clef --keystore /var/lib/bee-clef/keystore --stdio-ui newaccount --lightkdf 2>/dev/null << EOF
 $SECRET
 EOF
 } | tail -n -1 | cut -d'x' -f2 | tr '[:upper:]' '[:lower:]')
-            clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x"${ACCOUNT}" >/dev/null 2>&1 << EOF
+            bee-clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui setpw 0x"${ACCOUNT}" >/dev/null 2>&1 << EOF
 $SECRET
 $SECRET
 $MASTER_SECRET
@@ -32,7 +32,7 @@ EOF
             chown bee-clef:bee-clef /var/lib/bee-clef/passwords/"${FILENAME}"
             number=$((number+1))
         done
-        clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui attest $(sha256sum /etc/bee-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
+        bee-clef --keystore /var/lib/bee-clef/keystore --configdir /var/lib/bee-clef --stdio-ui attest $(sha256sum /etc/bee-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
 $MASTER_SECRET
 EOF
         chown -R bee-clef:bee-clef /var/lib/bee-clef
