@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
           repository: ethereum/go-ethereum
           path: go-ethereum
-          ref: v1.10.8
+          ref: v1.10.14
       - name: Setup release environment
         if: success() && startsWith(github.ref, 'refs/tags/v')
         run: |-
