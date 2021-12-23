@@ -1,6 +1,6 @@
 FROM golang:1.16.7 as build
 
-ARG TAG="v1.10.8"
+ARG TAG="v1.10.14"
 
 RUN apt-get update && apt-get install -y \
     make \
