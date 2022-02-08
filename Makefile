@@ -1,5 +1,5 @@
 PACKAGE_NAME          := github.com/ethersphere/bee-clef
-GOLANG_CROSS_VERSION  ?= v1.16.7
+GOLANG_CROSS_VERSION  ?= v1.17.6
 
 .PHONY: release
 release:
