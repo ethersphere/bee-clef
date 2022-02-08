@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+_USER=$(whoami)
+_GROUP=$(id -gn)
+_HOME=$(eval echo ~$USER)
+_DIR=/opt/homebrew/var/lib/swarm-clef
+_DATE=$(date +%s)
+
+install -o "${_USER}" -g "${_GROUP}" "${_DIR}"/keystore/"$(ls -1 "${_DIR}"/keystore/ | head -1)" "${_HOME}"/swarm-clef-key-"${_DATE}".json
+cat "${_DIR}"/password | pbcopy
+echo "Key exported to ${_HOME}/bee-clef-key-${_DATE}.json"
+echo "Password loaded into clipboard and ready to be pasted"
+
+exit 0

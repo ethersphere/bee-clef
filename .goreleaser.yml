@@ -20,6 +20,22 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
+  - id: darwin-arm64
+    main: ./cmd/clef
+    binary: bee-clef
+    dir: go-ethereum
+    goos:
+      - darwin
+    goarch:
+      - arm64
+    env:
+      - CC=oa64-clang
+      - CXX=oa64-clang++
+    flags:
+      - -v
+      - -trimpath
+    ldflags:
+      - -s -w
   - id: linux-arm64
     binary: bee-clef
     main: ./cmd/clef
@@ -91,14 +107,28 @@ archives:
 
     format: binary
   -
-    id: homebrew
+    id: homebrew-amd64
     builds:
     - darwin-amd64
     name_template: "{{ tolower .ProjectName }}-{{ tolower .Os }}-{{ tolower .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
     files:
-    - packaging/homebrew/swarm-clef
-    - packaging/homebrew/swarm-clef-init
-    - packaging/homebrew/swarm-clef-keys
+    - src: 'packaging/homebrew-amd64/*'
+      dst: '.'
+      strip_parent: true
+    - packaging/4byte.json
+    - packaging/rules.js
+    - packaging/default
+    - LICENSE
+    - README.md
+  -
+    id: homebrew-arm64
+    builds:
+    - darwin-arm64
+    name_template: "{{ tolower .ProjectName }}-{{ tolower .Os }}-{{ tolower .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    files:
+    - src: 'packaging/homebrew-arm64/*'
+      dst: '.'
+      strip_parent: true
     - packaging/4byte.json
     - packaging/rules.js
     - packaging/default
@@ -161,7 +191,8 @@ brews:
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_PAT }}"
     ids:
-      - homebrew
+      - homebrew-amd64
+      - homebrew-arm64
     commit_author:
       name: bee-worker
       email: bee-worker@ethswarm.org
@@ -174,7 +205,7 @@ brews:
     install: |
       (etc/"swarm-clef").mkpath
       (var/"lib/swarm-clef").mkpath
-      bin.install ["bee-clef", "packaging/homebrew/swarm-clef", "packaging/homebrew/swarm-clef-init", "packaging/homebrew/swarm-clef-keys"]
+      bin.install ["bee-clef", "swarm-clef", "swarm-clef-init", "swarm-clef-keys"]
       etc.install "packaging/default" => "swarm-clef/default" unless File.exists? etc/"swarm-clef/default"
       etc.install "packaging/4byte.json" => "swarm-clef/4byte.json" unless File.exists? etc/"swarm-clef/4byte.json"
       etc.install "packaging/rules.js" => "swarm-clef/rules.js" unless File.exists? etc/"swarm-clef/rules.js"
@@ -199,8 +230,6 @@ brews:
         </array>
         <key>RunAtLoad</key>
         <true/>
-        <key>WorkingDirectory</key>
-        <string>/usr/local</string>
         <key>StandardOutPath</key>
         <string>#{var}/log/swarm-clef/swarm-clef.log</string>
         <key>StandardErrorPath</key>

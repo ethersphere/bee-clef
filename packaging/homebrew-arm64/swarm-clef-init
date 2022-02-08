@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+if [ "$(ls -A /opt/homebrew/var/lib/swarm-clef/keystore 2> /dev/null)" = "" ]; then
+    SECRET=$(cat /opt/homebrew/var/lib/swarm-clef/password)
+    parse_json() { echo $1|sed -e 's/[{}]/''/g'|sed -e 's/", "/'\",\"'/g'|sed -e 's/" ,"/'\",\"'/g'|sed -e 's/" , "/'\",\"'/g'|sed -e 's/","/'\"---SEPERATOR---\"'/g'|awk -F=':' -v RS='---SEPERATOR---' "\$1~/\"$2\"/ {print}"|sed -e "s/\"$2\"://"|tr -d "\n\t"|sed -e 's/\\"/"/g'|sed -e 's/\\\\/\\/g'|sed -e 's/^[ \t]*//g'|sed -e 's/^"//' -e 's/"$//' ; }
+    /opt/homebrew/bin/bee-clef --configdir /opt/homebrew/var/lib/swarm-clef --stdio-ui init >/dev/null 2>&1 << EOF
+$SECRET
+$SECRET
+EOF
+    /opt/homebrew/bin/bee-clef --keystore /opt/homebrew/var/lib/swarm-clef/keystore --stdio-ui newaccount --lightkdf >/dev/null 2>&1 << EOF
+$SECRET
+EOF
+    /opt/homebrew/bin/bee-clef --keystore /opt/homebrew/var/lib/swarm-clef/keystore --configdir /opt/homebrew/var/lib/swarm-clef --stdio-ui setpw 0x$(parse_json $(cat /opt/homebrew/var/lib/swarm-clef/keystore/*) address) >/dev/null 2>&1 << EOF
+$SECRET
+$SECRET
+$SECRET
+EOF
+    /opt/homebrew/bin/bee-clef --keystore /opt/homebrew/var/lib/swarm-clef/keystore --configdir /opt/homebrew/var/lib/swarm-clef --stdio-ui attest $(shasum -a 256 /opt/homebrew/etc/swarm-clef/rules.js | cut -d' ' -f1 | tr -d '\n') >/dev/null 2>&1 << EOF
+$SECRET
+EOF
+fi

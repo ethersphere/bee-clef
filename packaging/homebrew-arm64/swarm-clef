@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+start() {
+    KEYSTORE=/opt/homebrew/var/lib/swarm-clef/keystore
+    CONFIGDIR=/opt/homebrew/var/lib/swarm-clef
+    . /opt/homebrew/etc/swarm-clef/default
+    CHAINID=${BEE_CLEF_CHAIN_ID:-5}
+    SECRET=$(cat /opt/homebrew/var/lib/swarm-clef/password)
+    rm /opt/homebrew/var/lib/swarm-clef/stdin /opt/homebrew/var/lib/swarm-clef/stdout || true
+    mkfifo /opt/homebrew/var/lib/swarm-clef/stdin /opt/homebrew/var/lib/swarm-clef/stdout
+    (
+    exec 3>/opt/homebrew/var/lib/swarm-clef/stdin
+    while read < /opt/homebrew/var/lib/swarm-clef/stdout
+    do
+        if [[ "$REPLY" =~ "enter the password" ]]; then
+            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > /opt/homebrew/var/lib/swarm-clef/stdin
+            break
+        fi
+    done
+    ) &
+    /opt/homebrew/bin/bee-clef --stdio-ui --keystore $KEYSTORE --configdir $CONFIGDIR --chainid $CHAINID --rules /opt/homebrew/etc/swarm-clef/rules.js --nousb --lightkdf --4bytedb-custom /opt/homebrew/etc/swarm-clef/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 --ipcpath /opt/homebrew/var/lib/swarm-clef < /opt/homebrew/var/lib/swarm-clef/stdin | tee /opt/homebrew/var/lib/swarm-clef/stdout
+}
+
+stop() {
+    echo "STOP! System will stop the service!"
+}
+
+case $1 in
+    start|stop) "$1"
+esac
