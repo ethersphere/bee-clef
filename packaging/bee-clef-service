@@ -15,7 +15,7 @@ start() {
 
     KEYSTORE=${DATA_DIR}/keystore
     MASTER_SECRET=$(cat ${PASSWORD_FILE})
-    CHAINID=${BEE_CLEF_CHAIN_ID:-5}
+    CHAINID=${BEE_CLEF_CHAIN_ID:-100}
     # clef with every start sets permissions back to 600
     rm --force ${DATA_DIR}/clef.ipc || true
     (while [ ! -e ${DATA_DIR}/clef.ipc ]; do

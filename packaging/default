@@ -1,5 +1,5 @@
 # Configuration for bee-clef daemon
 
-## By default configured for testnet (Goerli testnet)
-## On mainnet set BEE_CLEF_CHAIN_ID to 100 (xdaichain mainnet)
-BEE_CLEF_CHAIN_ID=5
+## By default configured to 100 for xdaichain mainnet
+## On testnet set BEE_CLEF_CHAIN_ID to 5 (Goerli testnet)
+BEE_CLEF_CHAIN_ID=100

@@ -4,7 +4,7 @@ start() {
     KEYSTORE=/usr/local/var/lib/swarm-clef/keystore
     CONFIGDIR=/usr/local/var/lib/swarm-clef
     . /usr/local/etc/swarm-clef/default
-    CHAINID=${BEE_CLEF_CHAIN_ID:-5}
+    CHAINID=${BEE_CLEF_CHAIN_ID:-100}
     SECRET=$(cat /usr/local/var/lib/swarm-clef/password)
     rm /usr/local/var/lib/swarm-clef/stdin /usr/local/var/lib/swarm-clef/stdout || true
     mkfifo /usr/local/var/lib/swarm-clef/stdin /usr/local/var/lib/swarm-clef/stdout
