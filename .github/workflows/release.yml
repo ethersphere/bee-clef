@@ -29,16 +29,19 @@ jobs:
           ref: v1.10.16
       - name: Setup release environment
         if: success() && startsWith(github.ref, 'refs/tags/v')
-        run: |-
+        run: |
           echo 'GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}' > .release-env
-          echo 'HOMEBREW_TAP_PAT=${{ secrets.HOMEBREW_TAP_PAT }}' >> .release-env
-      - name: Docker Login
+          echo 'HOMEBREW_TAP_PAT=${{ secrets.GHA_PAT_BASIC }}' >> .release-env
+      - name: Docker Hub and Quay Login
         if: success() && startsWith(github.ref, 'refs/tags/v')
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
         run: |
-          echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+          echo "${DOCKERHUB_PASSWORD}" | docker login --username "${DOCKERHUB_USERNAME}" --password-stdin
+          echo "${QUAY_PASSWORD}" | docker login --username "${QUAY_USERNAME}" quay.io --password-stdin
       - name: Release publish
         if: success() && startsWith(github.ref, 'refs/tags/v')
         run: make release

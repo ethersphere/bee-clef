@@ -322,3 +322,31 @@ docker_manifests:
   - ethersphere/clef:{{ .Version }}-armv7
   - ethersphere/clef:{{ .Version }}-arm64v8
   skip_push: auto
+- name_template: quay.io/ethersphere/clef:{{ .Major }}
+  image_templates:
+  - quay.io/ethersphere/clef:{{ .Version }}-amd64
+  - quay.io/ethersphere/clef:{{ .Version }}-armv7
+  - quay.io/ethersphere/clef:{{ .Version }}-arm64v8
+  skip_push: auto
+- name_template: quay.io/ethersphere/clef:{{ .Major }}.{{ .Minor }}
+  image_templates:
+  - quay.io/ethersphere/clef:{{ .Version }}-amd64
+  - quay.io/ethersphere/clef:{{ .Version }}-armv7
+  - quay.io/ethersphere/clef:{{ .Version }}-arm64v8
+  skip_push: auto
+- name_template: quay.io/ethersphere/clef:{{ .Major }}.{{ .Minor }}.{{ .Patch }}{{ with .Prerelease }}-{{ . }}{{ end }}
+  image_templates:
+  - quay.io/ethersphere/clef:{{ .Version }}-amd64
+  - quay.io/ethersphere/clef:{{ .Version }}-armv7
+  - quay.io/ethersphere/clef:{{ .Version }}-arm64v8
+- name_template: quay.io/ethersphere/clef:latest
+  image_templates:
+  - quay.io/ethersphere/clef:{{ .Version }}-amd64
+  - quay.io/ethersphere/clef:{{ .Version }}-armv7
+  - quay.io/ethersphere/clef:{{ .Version }}-arm64v8
+- name_template: quay.io/ethersphere/clef:beta
+  image_templates:
+  - quay.io/ethersphere/clef:{{ .Version }}-amd64
+  - quay.io/ethersphere/clef:{{ .Version }}-armv7
+  - quay.io/ethersphere/clef:{{ .Version }}-arm64v8
+  skip_push: auto
