@@ -170,12 +170,19 @@ nfpms:
 
     overrides:
       deb:
+        replacements:
+          armv7: armhf
         scripts:
           preinstall: ./packaging/deb/preinst
           postinstall: ./packaging/deb/postinst
           preremove: ./packaging/deb/prerm
           postremove: ./packaging/deb/postrm
       rpm:
+        replacements:
+          amd64: x86_64
+          arm64: aarch64
+          armv7: arm
+        file_name_template: "{{ tolower .ProjectName }}-{{ tolower .Version }}.{{ tolower .Arch }}"
         scripts:
           preinstall: ./packaging/rpm/pre
           postinstall: ./packaging/rpm/post
