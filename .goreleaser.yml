@@ -247,6 +247,7 @@ brews:
 dockers:
 - image_templates:
   - "ethersphere/clef:{{ .Version }}-amd64"
+  - "quay.io/ethersphere/clef:{{ .Version }}-amd64"
   use_buildx: true
   ids:
     - linux-amd64
@@ -265,6 +266,7 @@ dockers:
     - packaging/docker/entrypoint.sh
 - image_templates:
   - "ethersphere/clef:{{ .Version }}-armv7"
+  - "quay.io/ethersphere/clef:{{ .Version }}-armv7"
   use_buildx: true
   ids:
     - linux-armv7
@@ -284,6 +286,7 @@ dockers:
     - packaging/docker/entrypoint.sh
 - image_templates:
   - "ethersphere/clef:{{ .Version }}-arm64v8"
+  - "quay.io/ethersphere/clef:{{ .Version }}-arm64v8"
   use_buildx: true
   ids:
     - linux-arm64
