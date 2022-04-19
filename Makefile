@@ -1,5 +1,5 @@
 PACKAGE_NAME          := github.com/ethersphere/bee-clef
-GOLANG_CROSS_VERSION  ?= v1.17.6
+GOLANG_CROSS_VERSION  ?= v1.18.1
 
 .PHONY: release
 release:
@@ -18,5 +18,5 @@ release:
 		-v `pwd`:/go/src/$(PACKAGE_NAME) \
 		-v `echo ${HOME}`/.docker/config.json:/root/.docker/config.json \
 		-w /go/src/$(PACKAGE_NAME) \
-		troian/golang-cross:${GOLANG_CROSS_VERSION} \
+		goreleaser/goreleaser-cross:${GOLANG_CROSS_VERSION} \
 		release --rm-dist
