@@ -136,7 +136,7 @@ archives:
     - README.md
 
 nfpms:
-  - file_name_template: "{{ tolower .ProjectName }}_{{ tolower .Version }}_{{ tolower .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+  - file_name_template: "{{ tolower .ProjectName }}_{{ tolower .Version }}_{{ tolower .Arch }}"
 
     vendor: Ethereum Swarm
     homepage: https://swarm.ethereum.org/
@@ -181,7 +181,6 @@ nfpms:
         replacements:
           amd64: x86_64
           arm64: aarch64
-          armv7: arm
         file_name_template: "{{ tolower .ProjectName }}-{{ tolower .Version }}.{{ tolower .Arch }}"
         scripts:
           preinstall: ./packaging/rpm/pre
@@ -248,7 +247,7 @@ dockers:
 - image_templates:
   - "ethersphere/clef:{{ .Version }}-amd64"
   - "quay.io/ethersphere/clef:{{ .Version }}-amd64"
-  use_buildx: true
+  use: buildx
   ids:
     - linux-amd64
   goarch: amd64
@@ -267,7 +266,7 @@ dockers:
 - image_templates:
   - "ethersphere/clef:{{ .Version }}-armv7"
   - "quay.io/ethersphere/clef:{{ .Version }}-armv7"
-  use_buildx: true
+  use: buildx
   ids:
     - linux-armv7
   goarch: arm
@@ -287,7 +286,7 @@ dockers:
 - image_templates:
   - "ethersphere/clef:{{ .Version }}-arm64v8"
   - "quay.io/ethersphere/clef:{{ .Version }}-arm64v8"
-  use_buildx: true
+  use: buildx
   ids:
     - linux-arm64
   goarch: arm64
