@@ -6,5 +6,10 @@
   "e9563f05": "createBatch(address,uint256,uint8,bytes32)",
   "5239af71": "createBatch(address,uint256,uint8,uint8,bytes32,bool)",
   "b67644b9": "topUp(bytes32,uint256)",
-  "47aab79b": "increaseDepth(bytes32,uint8)"
+  "47aab79b": "increaseDepth(bytes32,uint8)",
+  "4a2e7598": "commit(bytes32,bytes32,uint256)",
+  "c1d810d5": "reveal(bytes32,uint8,bytes32,bytes32)",
+  "4e71d92d": "claim()",
+  "1ed2cd40": "depositStake(address,bytes32,uint256)",
+  "e34c4527": "withdrawFromStake(bytes32,uint256)"
 }
