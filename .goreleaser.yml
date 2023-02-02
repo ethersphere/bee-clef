@@ -138,6 +138,8 @@ archives:
 nfpms:
   - file_name_template: "{{ tolower .ProjectName }}_{{ tolower .Version }}_{{ tolower .Arch }}"
 
+    id: packages
+
     vendor: Ethereum Swarm
     homepage: https://swarm.ethereum.org/
 
@@ -189,6 +191,13 @@ nfpms:
           postremove: ./packaging/rpm/postun
 
     bindir: /usr/bin
+
+publishers:
+  - name: gemfury
+    ids:
+      - packages
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: if [[ {{ .Prerelease }} == "" ]]; then curl -F package=@{{ .ArtifactName }} https://{{ .Env.GEMFURY_TOKEN }}@push.fury.io/ethersphere/; fi
 
 brews:
   - name: swarm-clef
