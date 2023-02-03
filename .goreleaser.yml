@@ -197,7 +197,7 @@ publishers:
     ids:
       - packages
     dir: "{{ dir .ArtifactPath }}"
-    cmd: bash -c "if [[ \"{{ .Prerelease }}\" == \"\" ]]; then curl -F package=@{{ .ArtifactName }} https://{{ .Env.GEMFURY_TOKEN }}@push.fury.io/ethersphere/; fi"
+    cmd: bash -c "if [[ \"{{ .Prerelease }}\" == \"\" ]]; then curl -F package=@{{ .ArtifactName }} https://{{ .Env.GEMFURY_TOKEN }}@push.fury.io/ethersphere/; else echo SKIPPING PRERELEASE!; fi"
 
 brews:
   - name: swarm-clef
